@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Ning Hu" />
+
+
+<title>networks</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="site_libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="site_libs/d3-4.5.0/d3.min.js"></script>
+<script src="site_libs/sankey-1/sankey.js"></script>
+<script src="site_libs/sankeyNetwork-binding-0.4/sankeyNetwork.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Website</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="geospatial.html">Assignment 6</a>
+</li>
+<li>
+  <a href="networks.html">Assignment 7</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">networks</h1>
+<h4 class="author">Ning Hu</h4>
+<h4 class="date">11/8/2020</h4>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.4     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(readxl)
+library(tidyxl)
+library(igraph)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;igraph&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     as_data_frame, groups, union</code></pre>
+<pre><code>## The following objects are masked from &#39;package:purrr&#39;:
+## 
+##     compose, simplify</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     crossing</code></pre>
+<pre><code>## The following object is masked from &#39;package:tibble&#39;:
+## 
+##     as_data_frame</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     decompose, spectrum</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     union</code></pre>
+<pre class="r"><code>library(tidygraph)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;tidygraph&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:igraph&#39;:
+## 
+##     groups</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre class="r"><code>df &lt;- read_excel(&quot;data/State_to_State_Migrations_Table_2018.xls&quot;,skip = 6)</code></pre>
+<pre><code>## New names:
+## * `` -&gt; ...1
+## * `` -&gt; ...2
+## * `` -&gt; ...3
+## * `` -&gt; ...4
+## * `` -&gt; ...5
+## * ...</code></pre>
+<pre class="r"><code>df &lt;- df[-c(72:80), ] ##remove footnote
+df &lt;- df %&gt;% drop_na(1) ## drop empty cell
+df &lt;- df[-c(1,29), ] ## drop column names</code></pre>
+<pre class="r"><code>## state list
+states &lt;- df[,1]
+states_l = c()
+for (i in states){
+  states_l = c(states_l, i)
+}
+colnames(df)[1] &lt;- &#39;target&#39;
+
+## keep only state info
+df2 &lt;- df[,c(&quot;target&quot;,states_l)]
+
+## select 4 origin states &quot;New York&quot;, &quot;Texas&quot;, &quot;Arizona&quot;, &quot;California&quot;
+origin = c(&quot;New York&quot;, &quot;Texas&quot;, &quot;Arizona&quot;, &quot;California&quot;)
+df3 &lt;- df2[,c(&quot;target&quot;,origin)]
+
+## convert str to num, change NA to 0
+df3[, origin] &lt;- suppressWarnings(sapply(df3[, origin], as.numeric))
+df3 &lt;- df3 %&gt;%
+  mutate_all(funs(ifelse(is.na(.), 0, .)))</code></pre>
+<pre><code>## Warning: `funs()` is deprecated as of dplyr 0.8.0.
+## Please use a list of either functions or lambdas: 
+## 
+##   # Simple named list: 
+##   list(mean = mean, median = median)
+## 
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.</code></pre>
+<pre class="r"><code>## find top 10 target states of each origin state
+ny_top &lt;- df3[order(-df3$`New York`),]
+ny_top &lt;- ny_top[1:10,c(1,2)]
+
+tx_top &lt;- df3[order(-df3$Texas),]
+tx_top &lt;- tx_top[1:10,c(1,3)]
+
+az_top &lt;- df3[order(-df3$Arizona),]
+az_top &lt;- az_top[1:10,c(1,4)]
+
+ca_top &lt;- df3[order(-df3$California),]
+ca_top &lt;- ca_top[1:10,c(1,5)]</code></pre>
+<pre class="r"><code>## pivot source
+ny &lt;- ny_top %&gt;%
+  pivot_longer(!target,names_to=&#39;source&#39;,values_to=&#39;count&#39;)
+
+tx &lt;- tx_top %&gt;%
+  pivot_longer(!target,names_to=&#39;source&#39;,values_to=&#39;count&#39;)
+
+az &lt;- az_top %&gt;%
+  pivot_longer(!target,names_to=&#39;source&#39;,values_to=&#39;count&#39;)
+
+ca &lt;- ca_top %&gt;%
+  pivot_longer(!target,names_to=&#39;source&#39;,values_to=&#39;count&#39;)
+
+## merge dataframe
+
+move &lt;- rbind(ny,tx,az,ca)
+move</code></pre>
+<pre><code>## # A tibble: 40 x 3
+##    target         source   count
+##    &lt;chr&gt;          &lt;chr&gt;    &lt;dbl&gt;
+##  1 New Jersey     New York 64810
+##  2 Florida        New York 63033
+##  3 Pennsylvania   New York 43048
+##  4 California     New York 34848
+##  5 Connecticut    New York 27361
+##  6 North Carolina New York 25596
+##  7 Massachusetts  New York 19960
+##  8 Texas          New York 18925
+##  9 Virginia       New York 17983
+## 10 South Carolina New York 12721
+## # … with 30 more rows</code></pre>
+<div id="plot" class="section level2">
+<h2>plot</h2>
+<pre class="r"><code>library(networkD3)
+library(htmlwidgets)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;htmlwidgets&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:networkD3&#39;:
+## 
+##     JS</code></pre>
+<pre class="r"><code>nodes &lt;- data.frame(name = unique(c(move$source, move$target)))
+nodes$group &lt;- as.factor(c(rep(&quot;source&quot;, 4), rep(&quot;target&quot;, 19)))
+move$source &lt;- match(move$source,nodes$name) -1
+move$target &lt;- match(move$target,nodes$name) -1
+move$group &lt;- as.factor(move$source)</code></pre>
+<pre class="r"><code>my_color &lt;- &#39;d3.scaleOrdinal() .domain([&quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;source&quot;, &quot;target&quot;]) 
+.range([&quot;#ad92de&quot;,&quot;#3544e8&quot;,&quot;#e6b449&quot;,&quot;#31deb8&quot;, &quot;red&quot;, &quot;green&quot;])&#39;
+ 
+sankey &lt;- sankeyNetwork(Links = move,Nodes = nodes,
+              Source = &#39;source&#39;,Target = &#39;target&#39;,
+              Value = &#39;count&#39;,NodeID = &#39;name&#39;,LinkGroup = &#39;group&#39;,
+              NodeGroup = &quot;group&quot;,
+              colourScale =my_color)</code></pre>
+<pre><code>## Links is a tbl_df. Converting to a plain data frame.</code></pre>
+<pre class="r"><code>sankey &lt;- htmlwidgets::prependContent(sankey, htmltools::tags$h1(&quot;Top 10 migration from NY, TX, AZ and CA&quot;))
+
+sankey</code></pre>
+<h1>Top 10 migration from NY, TX, AZ and CA</h1>
+<div id="htmlwidget-98e2786f2f2235c5168f" style="width:672px;height:480px;" class="sankeyNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-98e2786f2f2235c5168f">{"x":{"links":{"source":[0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3],"target":[4,5,6,3,7,8,9,1,10,11,3,12,13,5,14,15,2,8,16,17,3,1,16,13,18,19,20,21,5,10,1,2,16,19,18,13,5,0,10,22],"value":[64810,63033,43048,34848,27361,25596,19960,18925,17983,12721,37810,31551,26930,24197,23588,22746,20245,18748,18425,15531,33670,18628,14252,7987,7736,6999,6827,5818,4542,4162,86164,68516,55467,50707,43058,28288,26888,25255,21210,21018],"group":["0","0","0","0","0","0","0","0","0","0","1","1","1","1","1","1","1","1","1","1","2","2","2","2","2","2","2","2","2","2","3","3","3","3","3","3","3","3","3","3"]},"nodes":{"name":["New York","Texas","Arizona","California","New Jersey","Florida","Pennsylvania","Connecticut","North Carolina","Massachusetts","Virginia","South Carolina","Oklahoma","Colorado","Louisiana","Georgia","Washington","Arkansas","Oregon","Nevada","Utah","Illinois","Idaho"],"group":["source","source","source","source","target","target","target","target","target","target","target","target","target","target","target","target","target","target","target","target","target","target","target"]},"options":{"NodeID":"name","NodeGroup":"group","LinkGroup":"group","colourScale":"d3.scaleOrdinal() .domain([\"0\", \"1\", \"2\", \"3\", \"source\", \"target\"]) \n.range([\"#ad92de\",\"#3544e8\",\"#e6b449\",\"#31deb8\", \"red\", \"green\"])","fontSize":7,"fontFamily":null,"nodeWidth":15,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":32,"sinksRight":true}},"evals":[],"jsHooks":[]}</script>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

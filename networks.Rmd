@@ -1,0 +1,127 @@
+---
+title: "networks"
+author: "Ning Hu"
+date: "11/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+library(readxl)
+library(tidyxl)
+library(igraph)
+library(tidygraph)
+```
+
+
+```{r, include=FALSE}
+df <- read_excel("data/State_to_State_Migrations_Table_2018.xls",skip = 6)
+df <- df[-c(72:80), ] ##remove footnote
+df <- df %>% drop_na(1) ## drop empty cell
+df <- df[-c(1,29), ] ## drop column names
+```
+
+
+
+```{r, include=FALSE}
+## state list
+states <- df[,1]
+states_l = c()
+for (i in states){
+  states_l = c(states_l, i)
+}
+colnames(df)[1] <- 'target'
+
+## keep only state info
+df2 <- df[,c("target",states_l)]
+
+## select 4 origin states "New York", "Texas", "Arizona", "California"
+origin = c("New York", "Texas", "Arizona", "California")
+df3 <- df2[,c("target",origin)]
+
+## convert str to num, change NA to 0
+df3[, origin] <- suppressWarnings(sapply(df3[, origin], as.numeric))
+df3 <- df3 %>%
+  mutate_all(funs(ifelse(is.na(.), 0, .)))
+```
+
+
+
+
+```{r, include=FALSE}
+## find top 10 target states of each origin state
+ny_top <- df3[order(-df3$`New York`),]
+ny_top <- ny_top[1:10,c(1,2)]
+
+tx_top <- df3[order(-df3$Texas),]
+tx_top <- tx_top[1:10,c(1,3)]
+
+az_top <- df3[order(-df3$Arizona),]
+az_top <- az_top[1:10,c(1,4)]
+
+ca_top <- df3[order(-df3$California),]
+ca_top <- ca_top[1:10,c(1,5)]
+```
+
+
+```{r, include=FALSE}
+## pivot source
+ny <- ny_top %>%
+  pivot_longer(!target,names_to='source',values_to='count')
+
+tx <- tx_top %>%
+  pivot_longer(!target,names_to='source',values_to='count')
+
+az <- az_top %>%
+  pivot_longer(!target,names_to='source',values_to='count')
+
+ca <- ca_top %>%
+  pivot_longer(!target,names_to='source',values_to='count')
+
+## merge dataframe
+
+move <- rbind(ny,tx,az,ca)
+move
+```
+
+## plot
+
+```{r, include=FALSE}
+library(networkD3)
+library(htmlwidgets)
+```
+
+
+
+```{r, include=FALSE}
+nodes <- data.frame(name = unique(c(move$source, move$target)))
+nodes$group <- as.factor(c(rep("source", 4), rep("target", 19)))
+move$source <- match(move$source,nodes$name) -1
+move$target <- match(move$target,nodes$name) -1
+move$group <- as.factor(move$source)
+```
+
+
+```{r}
+my_color <- 'd3.scaleOrdinal() .domain(["0", "1", "2", "3", "source", "target"]) 
+.range(["#ad92de","#3544e8","#e6b449","#31deb8", "red", "green"])'
+ 
+sankey <- sankeyNetwork(Links = move,Nodes = nodes,
+              Source = 'source',Target = 'target',
+              Value = 'count',NodeID = 'name',LinkGroup = 'group',
+              NodeGroup = "group",
+              colourScale =my_color)
+
+sankey <- htmlwidgets::prependContent(sankey, htmltools::tags$h1("Top 10 migration from NY, TX, AZ and CA"))
+
+sankey
+```
+
+
+
+
+

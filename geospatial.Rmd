@@ -16,6 +16,9 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 
 # R
+![fig1](fig1.png)
+![fig2](fig2.png)
+![fig3](fig3.png)
 
 ```{r, include=FALSE}
 library(tidyverse)
@@ -104,7 +107,7 @@ T23 <- ggplot(unemp_T,aes(geometry=geometry))+
   ggtitle("Unemployment rate of TX in 2016")
 ```
 
-```{r fig1, fig.height = 30, fig.width = 25, fig.align = "center"}
+```{r fig1, fig.height = 30, fig.width = 25, fig.align = "center",eval=FALSE}
 ggarrange(T11,T21,T12,T22,T13,T23,ncol = 2, nrow=3, align = 'hv', widths = c(6,6,6,6,6,6))
 ```
 
@@ -166,7 +169,7 @@ C23 <- ggplot(unemp_C,aes(geometry=geometry))+
   ggtitle("Unemployment rate of CA in 2016")
 ```
 
-```{r fig2, fig.height = 30, fig.width = 25, fig.align = "center"}
+```{r fig2, fig.height = 30, fig.width = 25, fig.align = "center",eval=FALSE}
 ggarrange(C11,C21,C12,C22,C13,C23,ncol = 2, nrow=3, align = 'hv', widths = c(6,6,6,6,6,6))
 ```
 
@@ -228,7 +231,7 @@ P23 <- ggplot(unemp_P,aes(geometry=geometry))+
   ggtitle("Unemployment rate of PA in 2016")
 ```
 
-```{r fig3, fig.height = 30, fig.width = 25, fig.align = "center"}
+```{r fig3, fig.height = 30, fig.width = 25, fig.align = "center",eval=FALSE}
 ggarrange(P11,P21,P12,P22,P13,P23,ncol = 2, nrow=3, align = 'hv', widths = c(6,6,6,6,6,6))
 ```
 

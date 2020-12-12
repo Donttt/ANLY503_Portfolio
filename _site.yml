@@ -8,7 +8,6 @@ navbar:
       href: about.html
     - text: "Assigment 5"
       menu:
-        - text: "Heading 1"
         - text: "task1"
           href: task1.html
         - text: "task2"
@@ -23,8 +22,5 @@ navbar:
       href: geospatial.html
     - text: "Assignment 7"
       href: networks.html
-      
-output:
-  html_document:
-    theme: cosmo
-    hightlight: textmate
+    - text: "Final Project"
+      href: final_project.html

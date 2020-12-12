@@ -1,0 +1,37 @@
+---
+title: "task5"
+author: "Ning Hu"
+date: "10/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+```
+
+```{r, include=FALSE}
+trans <- read_csv('data/transactions.csv')
+accts <- read_csv('data/accounts_analytical.csv')
+```
+
+```{r, include=FALSE}
+accts5 <- accts %>%
+  mutate(have_card = if_else(is.na(credit_cards),true = 'no credit card',false = 'has credit card'))
+```
+
+
+```{r,echo=FALSE}
+accts5 %>%
+  ggplot(aes(x=account_id,y=debit_credit_card_other_txn_tot))+
+  geom_point()+
+  facet_grid(~have_card)+
+  labs(title = 'totle credit card transaction between has/no credit card by account' )+
+  ylab('Total transactions')+
+  xlab('account id')
+## for some of those client with no credit card, they still have credit card transactions.
+```
+

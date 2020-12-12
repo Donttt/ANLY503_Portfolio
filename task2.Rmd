@@ -1,0 +1,73 @@
+---
+title: "task2"
+author: "Ning Hu"
+date: "10/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+library(plotly)
+```
+
+```{r, include=FALSE}
+trans <- read_csv('data/transactions.csv')
+accts <- read_csv('data/accounts_analytical.csv')
+```
+
+```{r, include=FALSE}
+accts2 <- accts %>%
+  drop_na(loan_amount)
+```
+
+```{r, include=FALSE}
+accts2 %>%
+  ggplot(aes(x = loan_amount))+
+  geom_density()+
+  labs( title = "Distribution of Loan Amount")
+```
+
+```{r, include=FALSE}
+loan_12 = accts2$loan_amount[accts2$loan_term==12]
+loan_24 = accts2$loan_amount[accts2$loan_term==24]
+loan_36 = accts2$loan_amount[accts2$loan_term==36]
+loan_48 = accts2$loan_amount[accts2$loan_term==48]
+loan_60 = accts2$loan_amount[accts2$loan_term==60]
+
+fig <- plot_ly(
+  x = loan_12,
+  type = "histogram",
+  alpha = 0.5,
+  name = "12")
+
+fig <- fig %>% 
+  add_histogram(x = loan_24, name = "24") %>% 
+  add_histogram(x = loan_36, name = "36") %>% 
+  add_histogram(x = loan_48, name = "48") %>%
+  add_histogram(x = loan_60, name = "60") %>%
+  layout(barmode = "overlay", title="Distribution of loan amounts of different terms") %>%
+  layout(xaxis = list(title="loan amounts"), yaxis = list(title="num of records"))
+```
+
+
+```{r}
+fig
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

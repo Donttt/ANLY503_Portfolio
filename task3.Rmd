@@ -1,0 +1,47 @@
+---
+title: "task3"
+author: "Ning Hu"
+date: "10/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+```
+
+```{r, include=FALSE}
+trans <- read_csv('data/transactions.csv')
+accts <- read_csv('data/accounts_analytical.csv')
+```
+
+```{r, include=FALSE}
+accts3 <- accts %>%
+  drop_na(loan_date) %>%
+  mutate(time_diff = loan_date-acct_creation_date) %>%
+  mutate(good_bad = if_else(loan_default, 'bad','good'))
+```
+
+
+
+```{r, include=FALSE}
+accts3 %>%
+  ggplot(aes(x = good_bad, y = time_diff))+
+  geom_boxplot()+
+  labs(title = 'Time difference between good and bad loan')+
+  ylab('diff in days')+
+  xlab('good or bad loan')
+```
+
+```{r,echo=FALSE}
+accts3 %>%
+  drop_na(account_district)%>%
+  ggplot(aes(x = account_district, fill = loan_default)) +
+    geom_bar(stat = "count")+
+  labs(title = "Compare of default by district")
+## For some district they have a higher default rage
+```
+

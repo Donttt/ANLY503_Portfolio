@@ -1,0 +1,50 @@
+---
+title: "task1"
+author: "Ning Hu"
+date: "10/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+```
+
+```{r, include=FALSE}
+trans <- read_csv('data/transactions.csv')
+accts <- read_csv('data/accounts_analytical.csv')
+```
+
+```{r, include=FALSE}
+accts1 <- accts %>%
+  select(c('account_id','credit_cards','loan_amount'))
+
+trans1 <- trans %>%
+  select(c(account_id,balance)) %>%
+  group_by(account_id) %>%
+  summarise(avg_balance = mean(balance))
+  
+accts1 <- accts1 %>%
+  mutate(have_card = if_else(is.na(credit_cards),true = 'no credit card',false = 'has credit card')) %>%
+  mutate(have_loan = if_else(is.na(loan_amount),true = 'no loan',false = 'has loan')) %>%
+  left_join(trans1,by = 'account_id') %>%
+  select(c(account_id,have_card,have_loan,avg_balance))
+  
+
+```
+
+
+```{r}
+accts1 %>%
+  ggplot(aes(x = account_id, y = avg_balance,color = have_loan,shape = have_card))+
+  geom_point()
+```
+
+
+
+
+
+

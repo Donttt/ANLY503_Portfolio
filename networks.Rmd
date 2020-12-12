@@ -106,7 +106,7 @@ move$group <- as.factor(move$source)
 ```
 
 
-```{r}
+```{r,include=FALSE}
 my_color <- 'd3.scaleOrdinal() .domain(["0", "1", "2", "3", "source", "target"]) 
 .range(["#ad92de","#3544e8","#e6b449","#31deb8", "red", "green"])'
  
@@ -117,7 +117,10 @@ sankey <- sankeyNetwork(Links = move,Nodes = nodes,
               colourScale =my_color)
 
 sankey <- htmlwidgets::prependContent(sankey, htmltools::tags$h1("Top 10 migration from NY, TX, AZ and CA"))
+```
 
+
+```{r}
 sankey
 ```
 

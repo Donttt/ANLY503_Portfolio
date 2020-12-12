@@ -39,9 +39,13 @@ The data can be found at https://www.kaggle.com/yelp-dataset/yelp-dataset.
 
 You can also download it from yelp website: https://www.yelp.com/dataset.\
 
+In Exploratory there are plots of quantitative and qualitative data.
 
+In Geographical there is geospatial plots of the business distribution at Pittsburgh.
 
+In Time Series tab, there is ratings over time of the mostly rated restaurant among all these business.
 
+In Text data, there are wordcloud and frequency plot of the word frequency in the 5 stars comment.
 
 Exploratory
 =======================================================================
@@ -413,4 +417,6 @@ df5[1:10,] %>% ggplot(aes(x=reorder(word,freq),y = freq))+
   labs(x = "word",y = "frequency",title = "Top 10 word frequency in 5 stars comment")+
   theme_bw()
 ```
+
+
 

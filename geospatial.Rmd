@@ -1,0 +1,240 @@
+---
+title: "geospatial"
+author: "Ning Hu"
+date: "11/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+#library(reticulate)
+#use_condaenv('r-reticulate',required = TRUE)
+```
+
+
+
+
+
+# R
+
+```{r, include=FALSE}
+library(tidyverse)
+library(sf)
+library(readxl)
+library(spData)
+library(sp)
+library(gridExtra)
+library(ggpubr)
+```
+
+
+```{r, include=FALSE}
+vote <- read_csv('data/countypres_2000-2016.csv')
+vote$FIPS <- as.character(vote$FIPS)
+unemp <- read_excel("data/Unemployment.xls",range = cell_limits(c(8, 1), c(NA, NA)))
+
+unemp <- unemp %>%
+  select(FIPStxt,Unemployment_rate_2008,Unemployment_rate_2012,Unemployment_rate_2016)
+
+```
+
+
+
+```{r, include=FALSE}
+## county
+county <- st_read('data/tl_2019_us_county-1/tl_2019_us_county.shp')
+county <- county %>%
+  filter(STATEFP == '06'|STATEFP == 42|STATEFP == 48)
+
+```
+
+# TX
+```{r, include=FALSE}
+vote_T <- vote %>%
+  filter((year==2008|year==2012|year==2016) & party == 'democrat' & state == 'Texas')
+vote_T['proportion'] = vote_T['candidatevotes']/vote_T['totalvotes']
+
+vote_T <- vote_T %>%
+  left_join(county,by = c('FIPS'='GEOID'))
+
+
+T11 <- vote_T %>%
+  filter(year==2008)
+T12 <- vote_T %>%
+  filter(year==2012)
+T13 <- vote_T %>%
+  filter(year==2016)
+
+T11 <- ggplot(T11,aes(geometry=geometry))+
+  geom_sf(aes(fill = proportion))+
+  scale_fill_distiller(name="Proportion of Votes", palette = "Blues",direction=1)+
+  ggtitle("Proportion of Votes for Democrat Candidate of TX in 2008")
+
+T12 <- ggplot(T12,aes(geometry=geometry))+
+  geom_sf(aes(fill = proportion))+
+  scale_fill_distiller(name="Proportion of Votes", palette = "Blues",direction=1)+
+  ggtitle("Proportion of Votes for Democrat Candidate of TX in 2012")
+
+T13 <- ggplot(T13,aes(geometry=geometry))+
+  geom_sf(aes(fill = proportion))+
+  scale_fill_distiller(name="Proportion of Votes", palette = "Blues",direction=1)+
+  ggtitle("Proportion of Votes for Democrat Candidate of TX in 2016")
+
+```
+
+```{r, include=FALSE}
+unemp_T <- unemp %>%
+  filter(substr(FIPStxt,1,2) == '48') %>%
+  left_join(county, by = c('FIPStxt' = 'GEOID')) %>%
+  tail(-1)
+
+T21 <- ggplot(unemp_T,aes(geometry=geometry))+
+  geom_sf(aes(fill = Unemployment_rate_2008))+
+  scale_fill_distiller(name="Unemployment rate", palette = "Reds",direction=1)+
+  ggtitle("Unemployment rate of TX in 2008")
+
+T22 <- ggplot(unemp_T,aes(geometry=geometry))+
+  geom_sf(aes(fill = Unemployment_rate_2012))+
+  scale_fill_distiller(name="Unemployment rate", palette = "Reds",direction=1)+
+  ggtitle("Unemployment rate of TX in 2012")
+
+T23 <- ggplot(unemp_T,aes(geometry=geometry))+
+  geom_sf(aes(fill = Unemployment_rate_2016))+
+  scale_fill_distiller(name="Unemployment rate", palette = "Reds",direction=1)+
+  ggtitle("Unemployment rate of TX in 2016")
+```
+
+```{r fig1, fig.height = 30, fig.width = 25, fig.align = "center"}
+ggarrange(T11,T21,T12,T22,T13,T23,ncol = 2, nrow=3, align = 'hv', widths = c(6,6,6,6,6,6))
+```
+
+From the graph we can see that in Texas counties with higher unemployment rate would tend to vote for Democrat candidates.
+
+# CA
+```{r, include=FALSE}
+vote_C <- vote %>%
+  filter((year==2008|year==2012|year==2016) & party == 'democrat' & state == 'California')
+vote_C['proportion'] = vote_C['candidatevotes']/vote_C['totalvotes']
+vote_C$FIPS <- paste0('0',vote_C$FIPS)
+vote_C <- vote_C %>%
+  left_join(county,by = c('FIPS'='GEOID'))
+
+
+C11 <- vote_C %>%
+  filter(year==2008)
+C12 <- vote_C %>%
+  filter(year==2012)
+C13 <- vote_C %>%
+  filter(year==2016)
+
+C11 <- ggplot(C11,aes(geometry=geometry))+
+  geom_sf(aes(fill = proportion))+
+  scale_fill_distiller(name="Proportion of Votes", palette = "Blues",direction=1)+
+  ggtitle("Proportion of Votes for Democrat Candidate of CA in 2008")
+
+C12 <- ggplot(C12,aes(geometry=geometry))+
+  geom_sf(aes(fill = proportion))+
+  scale_fill_distiller(name="Proportion of Votes", palette = "Blues",direction=1)+
+  ggtitle("Proportion of Votes for Democrat Candidate of CA in 2012")
+
+C13 <- ggplot(C13,aes(geometry=geometry))+
+  geom_sf(aes(fill = proportion))+
+  scale_fill_distiller(name="Proportion of Votes", palette = "Blues",direction=1)+
+  ggtitle("Proportion of Votes for Democrat Candidate of CA in 2016")
+
+```
+
+```{r, include=FALSE}
+unemp_C <- unemp %>%
+  filter(substr(FIPStxt,1,2) == '06') %>%
+  left_join(county, by = c('FIPStxt' = 'GEOID')) %>%
+  tail(-1)
+
+C21 <- ggplot(unemp_C,aes(geometry=geometry))+
+  geom_sf(aes(fill = Unemployment_rate_2008))+
+  scale_fill_distiller(name="Unemployment rate", palette = "Reds",direction=1)+
+  ggtitle("Unemployment rate of CA in 2008")
+
+C22 <- ggplot(unemp_C,aes(geometry=geometry))+
+  geom_sf(aes(fill = Unemployment_rate_2012))+
+  scale_fill_distiller(name="Unemployment rate", palette = "Reds",direction=1)+
+  ggtitle("Unemployment rate of CA in 2012")
+
+C23 <- ggplot(unemp_C,aes(geometry=geometry))+
+  geom_sf(aes(fill = Unemployment_rate_2016))+
+  scale_fill_distiller(name="Unemployment rate", palette = "Reds",direction=1)+
+  ggtitle("Unemployment rate of CA in 2016")
+```
+
+```{r fig2, fig.height = 30, fig.width = 25, fig.align = "center"}
+ggarrange(C11,C21,C12,C22,C13,C23,ncol = 2, nrow=3, align = 'hv', widths = c(6,6,6,6,6,6))
+```
+
+In California, most counties with lower unemployment rate would vote for democrat candidates, which is opposite to Texas.
+
+# PA
+```{r, include=FALSE}
+vote_P <- vote %>%
+  filter((year==2008|year==2012|year==2016) & party == 'democrat' & state == 'Pennsylvania')
+vote_P['proportion'] = vote_P['candidatevotes']/vote_P['totalvotes']
+
+vote_P <- vote_P %>%
+  left_join(county,by = c('FIPS'='GEOID'))
+
+
+P11 <- vote_P %>%
+  filter(year==2008)
+P12 <- vote_P %>%
+  filter(year==2012)
+P13 <- vote_P %>%
+  filter(year==2016)
+
+P11 <- ggplot(P11,aes(geometry=geometry))+
+  geom_sf(aes(fill = proportion))+
+  scale_fill_distiller(name="Proportion of Votes", palette = "Blues",direction=1)+
+  ggtitle("Proportion of Votes for Democrat Candidate of PA in 2008")
+
+P12 <- ggplot(P12,aes(geometry=geometry))+
+  geom_sf(aes(fill = proportion))+
+  scale_fill_distiller(name="Proportion of Votes", palette = "Blues",direction=1)+
+  ggtitle("Proportion of Votes for Democrat Candidate of PA in 2012")
+
+P13 <- ggplot(P13,aes(geometry=geometry))+
+  geom_sf(aes(fill = proportion))+
+  scale_fill_distiller(name="Proportion of Votes", palette = "Blues",direction=1)+
+  ggtitle("Proportion of Votes for Democrat Candidate of PA in 2016")
+
+```
+
+```{r, include=FALSE}
+unemp_P <- unemp %>%
+  filter(substr(FIPStxt,1,2) == '42') %>%
+  left_join(county, by = c('FIPStxt' = 'GEOID')) %>%
+  tail(-1)
+
+P21 <- ggplot(unemp_P,aes(geometry=geometry))+
+  geom_sf(aes(fill = Unemployment_rate_2008))+
+  scale_fill_distiller(name="Unemployment rate", palette = "Reds",direction=1)+
+  ggtitle("Unemployment rate of PA in 2008")
+
+P22 <- ggplot(unemp_P,aes(geometry=geometry))+
+  geom_sf(aes(fill = Unemployment_rate_2012))+
+  scale_fill_distiller(name="Unemployment rate", palette = "Reds",direction=1)+
+  ggtitle("Unemployment rate of PA in 2012")
+
+P23 <- ggplot(unemp_P,aes(geometry=geometry))+
+  geom_sf(aes(fill = Unemployment_rate_2016))+
+  scale_fill_distiller(name="Unemployment rate", palette = "Reds",direction=1)+
+  ggtitle("Unemployment rate of PA in 2016")
+```
+
+```{r fig3, fig.height = 30, fig.width = 25, fig.align = "center"}
+ggarrange(P11,P21,P12,P22,P13,P23,ncol = 2, nrow=3, align = 'hv', widths = c(6,6,6,6,6,6))
+```
+
+Counties with lower unemployment rate would tend to have a higher proportion of vote for Democrat candidate in PA.
+
+
+
+
+

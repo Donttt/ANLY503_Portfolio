@@ -39,7 +39,10 @@ The dataset is about the business that participated in Yelp app.
 
 The data can be found at https://www.kaggle.com/yelp-dataset/yelp-dataset.
 
-You can also download it from yelp website: https://www.yelp.com/dataset.
+You can also download it from yelp website: https://www.yelp.com/dataset.\
+
+
+
 
 
 Exploratory
@@ -333,7 +336,8 @@ best_review[500:10417,]%>%
 Text
 =======================================================================
 
-The word cloud on the left is from the comment of people who gave 5 stars for the restaurant. On the right side is the barchart of the word frequency.
+The word cloud on the left is from the comment of people who gave 5 stars for the restaurant.(Please refresh page to get the wordcloud)
+On the right side is the barchart of the word frequency.
 From the graph we can see that people are extremely satisfied with their food and their buffet style.
 (Since the text file is too large and it took more than 1 hour to read in. I saved useful information to csv for plotting. The code can be found in the rmarkdown.)
 
@@ -393,7 +397,7 @@ w1 <- wordcloud2(df5[1:80,],size=1)
 ```
 Column 
 -------------------------------------
-### Chart 1
+### Chart 1 Please refresh page to get the wordcloud
 
 ```{r}
 w1

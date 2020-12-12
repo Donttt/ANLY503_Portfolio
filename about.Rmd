@@ -2,4 +2,8 @@
 title: "About This Website"
 ---
 
-More about this website.
+This is a website of my class ANLY503 Portfolio.
+
+
+# About me
+My name is Ning Hu and I'm currently a second year geaduate student major in Data Science at Georgetown University. I enjoyed my study at Georgetown. 

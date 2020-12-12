@@ -31,6 +31,12 @@ library(SnowballC)
 library(RColorBrewer)
 ```
 
+About
+=======================================================================
+The dataset is about the business that participated in Yelp app. 
+The data can be found at https://www.kaggle.com/yelp-dataset/yelp-dataset.
+You can also download it from yelp website: https://www.yelp.com/dataset.
+
 
 Exploratory
 =======================================================================
@@ -49,7 +55,8 @@ state_count <- business %>%
 ```
 
 
-
+Here is a brief view of what the Business data. On the left is the distribution of businesses participate with Yelp. Since the data set is very large, I will choose PA part for Geographical and Network. 
+On the right sight is pie charts for rating stars, which is qualitative data. Since 10 levels is too much in the view, I choose to round it to 5 levels. And I will compare these two level in Geographical part.
 
 Column {data-width=650}
 -----------------------------------------------------------------------
@@ -95,11 +102,12 @@ rating %>%
   ggplot(aes(x = "",y = count,fill = stars))+
   geom_bar(width = .8,stat = "identity")+
   coord_polar("y", start=0)+
-  scale_fill_brewer("Blues")+
+  scale_fill_brewer("Stars")+
   blank_theme +
   theme(axis.text.x=element_blank(),axis.text.y=element_blank())+
   geom_text(aes(y = count/3 + c(0, cumsum(count)[-length(count)]), 
-            label = percent(count/sum(count))), size=3)
+            label = percent(count/sum(count))), size=3)+
+  ggtitle("Pie with 10 levels of stars")
 ```
 
 ### Chart C
@@ -118,20 +126,22 @@ rating %>%
   ggplot(aes(x = "",y = count,fill = stars))+
   geom_bar(width = .8,stat = "identity")+
   coord_polar("y", start=0)+
-  scale_fill_brewer("Blues")+
+  scale_fill_brewer("Stars")+
   blank_theme +
   theme(axis.text.x=element_blank(),axis.text.y=element_blank())+
   geom_text(aes(y = count/3 + c(0, cumsum(count)[-length(count)]), 
-            label = percent(count/sum(count))), size=3)
+            label = percent(count/sum(count))), size=3)+
+  ggtitle("Pie with 5 levels of stars")
 ```
 
 Geographical
 =======================================================================
+There are 4 figures in this parts. They are plots of business distribution at Pittsburgh. On the top left side is Business distribution by stars with 5 levels. In order to find there distribution difference, I plotted their distribution center at the bottom. The circle size is related to the business number. From the graph we can see that business with higher stars are tend to located to the east side of the city, while lower stars business tend to locate to the west side. The 10 level stars business distribution plot also confirms the finding. Therefore, if people would like to having food or shopping at Pittsburgh, it is better to go to the east part of the city.
 
 Row
 -------------------------------------
     
-### Chart 1
+### Chart 1 Business Distribution By Stars
     
 ```{r,include=FALSE}
 city_b <- st_read("data/Pittsburgh_City_Boundary-shp/City_Boundary.shp")
@@ -159,7 +169,7 @@ leaflet(PI) %>%
   leaflet::addLegend("bottomleft", pal =pal,values = PI$stars)
 ```
  
-### Chart 2
+### Chart 2 Business Distribution By Stars
     
 ```{r}
 center <- PI%>%
@@ -177,7 +187,7 @@ leaflet(center) %>%
 Row
 -------------------------------------
     
-### Chart 3
+### Chart 3 Business Distribution By Stars
     
 ```{r}
 PI <- subset(business, city == "Pittsburgh")
@@ -199,7 +209,7 @@ leaflet(PI) %>%
   leaflet::addLegend("bottomleft", pal =pal,values = PI$stars)
 ```
     
-### Chart 4
+### Chart 4 Business Distribution By Stars
 
 ```{r}
 center <- PI%>%
@@ -220,6 +230,9 @@ leaflet(center) %>%
 
 
 Network
+
+The Network is a study about the American Food business. There are two kinds of American Food business: Traditional and New. The network shows what business categories are related to the two American Food styles. There are also many overlaps between these two styles.
+
 =======================================================================
 ### Chart 1
     
@@ -257,7 +270,16 @@ forceNetwork(Links = links, Nodes = nodes, Source = "source",
 
 Time Series
 =======================================================================
-```{r}
+
+The time series is the ratings over time of the mostly rated restaurant among all these business. This business has an average of 4 stars rating. 
+The moving average line shows that this restaurant always has a very high level of rating.
+
+
+Column 
+-------------------------------------
+### Chart 1
+
+```{r,include=FALSE}
 best_business <- business%>%
   arrange(.,-review_count)%>%
   head(1)%>%
@@ -307,6 +329,10 @@ best_review[500:10417,]%>%
 Text
 =======================================================================
 
+The word cloud on the left is from the comment of people who gave 5 stars for the restaurant. On the right side is the barchart of the word frequency.
+From the graph we can see that people are extremely satisfied with their food and their buffet style.
+(Since the text file is too large and it took more than 1 hour to read in. I saved useful information to csv for plotting. The code can be found in the rmarkdown.)
+
 
 ```{r,eval=FALSE}
 myJSON <- . %>%
@@ -328,19 +354,15 @@ write.csv(best_review2,"data/best_review2.csv")
 
 
 
-```{r}
-library(textcat)
+```{r,include=FALSE}
 best_review <- read_csv("data/best_review2.csv")
-best_review$language = textcat(best_review$text)
-## select english reviews
-eng <- subset(best_review,language == 'english')
 ```
 
 
 
-```{r}
-review5 <- eng[which(eng$stars==5),]
-review1 <- eng[which(eng$stars==1),]
+```{r,include=FALSE}
+review5 <- best_review[which(best_review$stars==5),]
+review1 <- best_review[which(best_review$stars==1),]
 review5<- review5$text
 review1<- review1$text
 r5 <- Corpus(VectorSource(review5))
@@ -365,7 +387,7 @@ df5 <- data.frame(word = names(words5),freq=words5)
 set.seed(1234) # for reproducibility 
 #wordcloud(words = df$word, freq = df$freq, min.freq = 1,max.words=200,random.order=FALSE, rot.per=0.35,colors=brewer.pal(8, "Dark2"))
 
-wordcloud2(df5[1:100,],size=0.8)
+wordcloud2(df5[1:80,],size=1)
 ```
 
 Column 
@@ -373,17 +395,10 @@ Column
 ### Chart 2
 
 ```{r}
-r1 <- r1 %>%
-  tm_map(removeNumbers) %>%
-  tm_map(removePunctuation) %>%
-  tm_map(stripWhitespace)
-r1 <- tm_map(r1, content_transformer(tolower))
-r1 <- tm_map(r1, removeWords, stopwords("english"))
-
-dtm1 <- TermDocumentMatrix(r1)
-matrix1 <- as.matrix(dtm1)
-words1 <- sort(rowSums(matrix1),decreasing=TRUE) 
-df1 <- data.frame(word = names(words1),freq=words1)
-set.seed(1234) # for reproducibility 
-wordcloud2(df1[1:100,],size=0.8)
+df5[1:10,] %>% ggplot(aes(x=reorder(word,freq),y = freq))+
+  geom_bar(stat = "identity",fill ="orange")+
+  coord_flip()+
+  labs(x = "word",y = "frequency",title = "Top 10 word frequency in 5 stars comment")+
+  theme_bw()
 ```
+

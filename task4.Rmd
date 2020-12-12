@@ -7,8 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-#library(reticulate)
-#use_condaenv('r-reticulate',required = TRUE)
+library(reticulate)
+use_condaenv('r-reticulate',required = TRUE)
 ```
 
 ```{r,eval=FALSE}
@@ -17,36 +17,36 @@ py_install('seaborn')
 py_install('pandas')
 py_install('numpy')
 ```
+# Python
 
-
-```{python,eval=FALSE}
+```{python}
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 ```
 
-```{python,eval=FALSE}
+```{python}
 transactions = pd.read_csv("data/transactions.csv")
 transactions['account_id'].value_counts().sort_values(ascending=False)
 ```
 
 
-```{python,eval=FALSE}
+```{python}
 transactions = transactions.loc[transactions['account_id'] == 8261]
 transactions['date'] = pd.to_datetime(transactions['date'])
 transactions = transactions.set_index('date').sort_index()
 ```
 
 
-```{python,eval=FALSE}
+```{python}
 plt.figure(1)
 fig1 = sns.lineplot(x=transactions.index, y=transactions['amount'], data=transactions, hue=transactions['type'])
 fig1.set_title('8261\'s debit & credit transactions amounts over time')
 plt.show()
 ```
 
-```{python,eval=FALSE}
+```{python}
 plt.figure(2)
 fig2 = sns.lineplot(x=transactions.index, y=transactions['amount'], data=transactions, hue=transactions['method'])
 fig2.set_title('8261\'s transactions amounts of different methods over time')
@@ -55,14 +55,14 @@ plt.show()
 
 
 
-```{python,eval=FALSE}
+```{python}
 plt.figure(3)
 fig3 = sns.lineplot(x=transactions.index, y=transactions['amount'], data=transactions, hue=transactions['category'])
 fig3.set_title('8261\'s transactions amounts of different categories over time')
 plt.show()
 ```
 
-
+# R
 
 ```{r,include=FALSE}
 library(tidyverse)

@@ -350,8 +350,21 @@ py_install(&#39;numpy&#39;)</code></pre>
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns</code></pre>
-<pre class="python"><code>transactions = pd.read_csv(&quot;data/transactions.csv&quot;)
-transactions[&#39;account_id&#39;].value_counts().sort_values(ascending=False)</code></pre>
+<pre class="python"><code>transactions = pd.read_csv(&quot;data/transactions.csv&quot;)</code></pre>
+<pre><code>## sys:1: DtypeWarning: Columns (6) have mixed types.Specify dtype option on import or set low_memory=False.</code></pre>
+<pre class="python"><code>transactions[&#39;account_id&#39;].value_counts().sort_values(ascending=False)</code></pre>
+<pre><code>## 8261    675
+## 3834    665
+## 96      661
+## 2932    655
+## 9307    649
+##        ... 
+## 1430     12
+## 758      12
+## 727      11
+## 315      11
+## 182       9
+## Name: account_id, Length: 4500, dtype: int64</code></pre>
 <pre class="python"><code>transactions = transactions.loc[transactions[&#39;account_id&#39;] == 8261]
 transactions[&#39;date&#39;] = pd.to_datetime(transactions[&#39;date&#39;])
 transactions = transactions.set_index(&#39;date&#39;).sort_index()</code></pre>
@@ -359,14 +372,17 @@ transactions = transactions.set_index(&#39;date&#39;).sort_index()</code></pre>
 fig1 = sns.lineplot(x=transactions.index, y=transactions[&#39;amount&#39;], data=transactions, hue=transactions[&#39;type&#39;])
 fig1.set_title(&#39;8261\&#39;s debit &amp; credit transactions amounts over time&#39;)
 plt.show()</code></pre>
+<p><img src="task4_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <pre class="python"><code>plt.figure(2)
 fig2 = sns.lineplot(x=transactions.index, y=transactions[&#39;amount&#39;], data=transactions, hue=transactions[&#39;method&#39;])
 fig2.set_title(&#39;8261\&#39;s transactions amounts of different methods over time&#39;)
 plt.show()</code></pre>
+<p><img src="task4_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <pre class="python"><code>plt.figure(3)
 fig3 = sns.lineplot(x=transactions.index, y=transactions[&#39;amount&#39;], data=transactions, hue=transactions[&#39;category&#39;])
 fig3.set_title(&#39;8261\&#39;s transactions amounts of different categories over time&#39;)
 plt.show()</code></pre>
+<p><img src="task4_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p><img src="task4_files/figure-html/unnamed-chunk-12-1.png" width="672" /> <img src="task4_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p><img src="task4_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 

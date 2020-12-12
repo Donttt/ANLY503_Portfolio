@@ -2,8 +2,6 @@
 title: "Project"
 output: 
   flexdashboard::flex_dashboard:
-    navbar:
-      - { title: "Back", href:"https://donttt.github.io/ANLY503_Portfolio/",align: right}
     orientation: columns
     vertical_layout: fill
 ---

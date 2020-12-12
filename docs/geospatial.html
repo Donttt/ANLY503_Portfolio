@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Ning Hu" />
 
 
-<title>My Website</title>
+<title>geospatial</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -333,12 +334,34 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">My Website</h1>
+<h1 class="title toc-ignore">geospatial</h1>
+<h4 class="author">Ning Hu</h4>
+<h4 class="date">11/6/2020</h4>
 
 </div>
 
 
-<p>This is a website of my class ANLY503 Portfolio. It includes my assignment from 5 to 7 and also my final project.</p>
+<div id="r" class="section level1">
+<h1>R</h1>
+</div>
+<div id="tx" class="section level1">
+<h1>TX</h1>
+<pre class="r"><code>ggarrange(T11,T21,T12,T22,T13,T23,ncol = 2, nrow=3, align = &#39;hv&#39;, widths = c(6,6,6,6,6,6))</code></pre>
+<p><img src="geospatial_files/figure-html/fig1-1.png" width="2400" style="display: block; margin: auto;" /></p>
+<p>From the graph we can see that in Texas counties with higher unemployment rate would tend to vote for Democrat candidates.</p>
+</div>
+<div id="ca" class="section level1">
+<h1>CA</h1>
+<pre class="r"><code>ggarrange(C11,C21,C12,C22,C13,C23,ncol = 2, nrow=3, align = &#39;hv&#39;, widths = c(6,6,6,6,6,6))</code></pre>
+<p><img src="geospatial_files/figure-html/fig2-1.png" width="2400" style="display: block; margin: auto;" /></p>
+<p>In California, most counties with lower unemployment rate would vote for democrat candidates, which is opposite to Texas.</p>
+</div>
+<div id="pa" class="section level1">
+<h1>PA</h1>
+<pre class="r"><code>ggarrange(P11,P21,P12,P22,P13,P23,ncol = 2, nrow=3, align = &#39;hv&#39;, widths = c(6,6,6,6,6,6))</code></pre>
+<p><img src="geospatial_files/figure-html/fig3-1.png" width="2400" style="display: block; margin: auto;" /></p>
+<p>Counties with lower unemployment rate would tend to have a higher proportion of vote for Democrat candidate in PA.</p>
+</div>
 
 
 

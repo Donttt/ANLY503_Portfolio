@@ -2,6 +2,8 @@
 title: "Project"
 output: 
   flexdashboard::flex_dashboard:
+    navbar:
+      - { title: "Back", href:"https://donttt.github.io/ANLY503_Portfolio/",align: right}
     orientation: columns
     vertical_layout: fill
 ---
@@ -33,8 +35,10 @@ library(RColorBrewer)
 
 About
 =======================================================================
-The dataset is about the business that participated in Yelp app. 
+The dataset is about the business that participated in Yelp app.
+
 The data can be found at https://www.kaggle.com/yelp-dataset/yelp-dataset.
+
 You can also download it from yelp website: https://www.yelp.com/dataset.
 
 
@@ -368,11 +372,9 @@ review1<- review1$text
 r5 <- Corpus(VectorSource(review5))
 r1 <- Corpus(VectorSource(review1))
 ```
-Column 
--------------------------------------
-### Chart 1
 
-```{r,error=TRUE}
+
+```{r,include=FALSE}
 r5 <- r5 %>%
   tm_map(removeNumbers) %>%
   tm_map(removePunctuation) %>%
@@ -387,8 +389,16 @@ df5 <- data.frame(word = names(words5),freq=words5)
 set.seed(1234) # for reproducibility 
 #wordcloud(words = df$word, freq = df$freq, min.freq = 1,max.words=200,random.order=FALSE, rot.per=0.35,colors=brewer.pal(8, "Dark2"))
 
-wordcloud2(df5[1:80,],size=1)
+w1 <- wordcloud2(df5[1:80,],size=1)
 ```
+Column 
+-------------------------------------
+### Chart 1
+
+```{r}
+w1
+```
+
 
 Column 
 -------------------------------------
